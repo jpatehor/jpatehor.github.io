@@ -6,6 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<script src="assets/ambiente.js" defer></script>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { width:100%; min-height:100%; background:#042E37; }
@@ -84,6 +85,10 @@
   .qr-card img { width:166px; height:166px; display:block; }
   .qr-card small { font-size:8px; line-height:9px; color:#E30613; font-weight:800; letter-spacing:1.4px; text-transform:uppercase; }
   .qr-card span { font-size:10px; line-height:12px; color:#0B5A6B; font-weight:800; text-align:center; }
+  .sound-control { position:absolute; top:24px; right:36px; z-index:12; display:inline-flex; align-items:center; gap:7px; padding:10px 15px; border:1px solid rgba(11,90,107,.22); border-radius:100px; background:rgba(255,255,255,.92); color:#0B5A6B; font:700 12px 'Montserrat',Arial,sans-serif; box-shadow:0 6px 18px rgba(6,59,70,.10); cursor:pointer; }
+  .sound-control .sound-icon { color:#E30613; font-size:16px; }
+  .sound-control[aria-pressed="true"] { background:#0B5A6B; color:#fff; }
+  .sound-control[aria-pressed="true"] .sound-icon { color:#FFD100; }
 
   .bio { position:absolute; top:580px; left:82px; right:64px; display:flex; align-items:flex-start; gap:18px; }
   .bio-label { flex:0 0 auto; font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#E30613; padding-top:3px; }
@@ -129,6 +134,10 @@
 </head>
 <body>
 <div id="holder"><div class="canvas" id="canvas">
+
+  <button class="sound-control" id="pautaSoundControl" type="button" aria-pressed="false" aria-label="Activar sonido ambiente; no se reproduce automáticamente">
+    <span class="sound-icon" aria-hidden="true">♫</span><span class="sound-label">Escuchar ambiente</span>
+  </button>
 
   <svg class="brush" viewBox="0 0 260 520" fill="none">
     <path d="M250 10C180 90 150 190 168 300c10 62 38 118 76 168" stroke="#E30613" stroke-width="26" stroke-linecap="round"/>
@@ -236,6 +245,13 @@
   window.addEventListener("resize", fitPauta);
   window.addEventListener("load", fitPauta);
   fitPauta();
+  const soundButton = document.getElementById("pautaSoundControl");
+  let ambientAudio = null;
+  soundButton?.addEventListener("click", async () => {
+    if (!ambientAudio) { ambientAudio = new Audio(window.BANCOOMEVA_AMBIENT_AUDIO || "assets/ambiente-bancoomeva.mp3"); ambientAudio.loop = true; ambientAudio.volume = 0.22; }
+    if (ambientAudio.paused) { try { await ambientAudio.play(); soundButton.setAttribute("aria-pressed","true"); soundButton.querySelector(".sound-label").textContent="Pausar ambiente"; } catch { soundButton.querySelector(".sound-label").textContent="No se pudo reproducir"; } }
+    else { ambientAudio.pause(); soundButton.setAttribute("aria-pressed","false"); soundButton.querySelector(".sound-label").textContent="Escuchar ambiente"; }
+  });
 </script>
 </body>
 </html>
