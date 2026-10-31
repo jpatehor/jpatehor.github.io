@@ -670,7 +670,6 @@
       <details class="reveal"><summary>¿Cuánto tarda un crédito?</summary><p>Depende del producto, de la documentación y de la mesa de crédito. Desde el primer día te doy un estimado claro y te aviso si falta algo para no radicar dos veces.</p></details>
       <details class="reveal"><summary>¿Qué necesito para empezar?</summary><p>RUT, certificado de Cámara de Comercio, estados financieros, cédula del representante legal y los formatos de vinculación. Te acompaño en la lista exacta según el producto.</p></details>
       <details class="reveal"><summary>¿Cuáles son las tasas?</summary><p>Dependen del perfil, del producto y del plazo. Las condiciones vigentes están publicadas en bancoomeva.com.co &gt; Tasas y Tarifas. En la conversación te explico el costo total, no solo la tasa.</p></details>
-      <details class="reveal"><summary>¿La asesoría tiene costo?</summary><p>No. La conversación inicial y el diagnóstico son gratuitos. Solo pagas las condiciones del producto que decidas tomar.</p></details>
       <details class="reveal"><summary>¿Me garantizan la aprobación?</summary><p>No. Ninguna entidad seria puede garantizarla. Lo que sí te garantizo es que te digo rápido si es viable y por qué.</p></details>
     </div>
   </div>
@@ -924,11 +923,10 @@
     tramites: 'Puede solicitar extractos, certificados, paz y salvos y soporte de canales virtuales. <button class="chat-action" data-action="support">Solicitar Documentos</button>',
     linea: 'Línea Empresarial Bancoomeva:<br>• Nacional: <a href="tel:018000941318">01 8000 941 318</a> · Opción 4 y 2<br>• Móvil: <a href="tel:+573009109898">300 910 9898</a> · Opción 2, 4 y 2<br>• Correo: <a href="mailto:bancoomeva_empresarial@coomeva.com.co">bancoomeva_empresarial@coomeva.com.co</a><br>Horario: lunes a viernes, 8:00 a.m. – 6:00 p.m.',
     breb: 'Bre-B es el sistema de pagos inmediatos del Banco de la República. Permite enviar y recibir dinero en segundos, 24/7, entre bancos y billeteras, con una llave (celular, correo, cédula, alias @coo+celular o QR). El dinero llega en menos de 20 segundos y puedes asociar hasta 5 llaves. Está disponible en la app y en la banca virtual.<br><a href="https://www.bancoomeva.com.co/publicaciones/164752/bre-b/" target="_blank" rel="noopener">Ver guía oficial</a>',
-    faq: '¿Qué te gustaría consultar?<div class="chat-quick"><button data-intent="faq-credit-time">¿Cuánto tarda un crédito?</button><button data-intent="faq-docs">¿Qué documentos necesito?</button><button data-intent="faq-rates">¿Cuáles son las tasas?</button><button data-intent="faq-cost">¿La asesoría tiene costo?</button><button data-intent="faq-approval">¿Garantizan aprobación?</button></div>',
+    faq: '¿Qué te gustaría consultar?<div class="chat-quick"><button data-intent="faq-credit-time">¿Cuánto tarda un crédito?</button><button data-intent="faq-docs">¿Qué documentos necesito?</button><button data-intent="faq-rates">¿Cuáles son las tasas?</button><button data-intent="faq-approval">¿Garantizan aprobación?</button></div>',
     'faq-credit-time': 'El tiempo depende del producto, de que la documentación esté completa y de la evaluación de crédito. Diana puede revisar tu caso y orientarte sobre el siguiente paso.',
     'faq-docs': 'Para iniciar una solicitud empresarial normalmente se solicitan RUT, certificado de Cámara de Comercio, estados financieros y documento del representante legal. Los requisitos pueden variar por producto. <button class="chat-action" data-action="support">Solicitar acompañamiento documental</button>',
     'faq-rates': 'Las tasas y tarifas pueden cambiar y dependen del producto y las condiciones vigentes. Consulta la fuente oficial: <a href="https://www.bancoomeva.com.co/publicaciones/163812/tasas-y-tarifas/" target="_blank" rel="noopener">Tasas y Tarifas Bancoomeva</a>.',
-    'faq-cost': 'La conversación inicial y la orientación comercial no tienen costo. Las condiciones y costos de cada producto se informan en su ficha y en Tasas y Tarifas oficiales.',
     'faq-approval': 'No. La aprobación depende del estudio, la información entregada y las políticas vigentes de Bancoomeva. Diana puede ayudarte a preparar la solicitud; la decisión la toma el banco.',
     agenda: 'Con gusto. <a href="https://wa.me/573187075136?text=Hola%20Diana%2C%20necesito%20acompa%C3%B1amiento%20con%20mi%20documentaci%C3%B3n." target="_blank" rel="noopener">Escríbeme por WhatsApp</a> y reviso tu caso.',
     ove: 'Puede ingresar a la Oficina Virtual Empresarial aquí: <a href="https://oficinavirtualemp.bancoomeva.com.co/" target="_blank" rel="noopener">Abrir Oficina Virtual</a>.',
@@ -998,7 +996,6 @@
     if (/cuanto tarda|tiempo.*credito|demora.*credito/.test(s)) return 'faq-credit-time';
     if (/que documento|documentacion|requisitos.*document/.test(s)) return 'faq-docs';
     if (/tasa|tarifa|interes/.test(s)) return 'faq-rates';
-    if (/costo.*asesoria|asesoria.*costo|cobran.*asesoria/.test(s)) return 'faq-cost';
     if (/garantiza.*aprob|aprobacion.*garant/.test(s)) return 'faq-approval';
     if (/preguntas frecuentes|pregunta frecuente|faq/.test(s)) return 'faq';
     if (/documento|extracto|certificado|paz|salvo|tramite/.test(s)) return 'tramites';
