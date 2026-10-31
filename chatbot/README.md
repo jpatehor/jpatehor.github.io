@@ -41,6 +41,10 @@ Mientras `BANCOOMEVA_CHAT_API_URL` esté vacío, el campo de texto usa respuesta
 
 **Estado real:** Worker scaffold creado y validado sintácticamente. No está desplegado ni conectado porque aún requiere cuenta/proyecto Cloudflare, aprobación de proveedor y secreto `OPENAI_API_KEY`. No incluir la clave en GitHub ni compartirla por chat.
 
+**Plan ChatGPT Basic:** la suscripción de ChatGPT permite usar ChatGPT en sus superficies disponibles, pero no incluye la API para integrar el modelo en una landing. La API tiene facturación y configuración separadas. Fuente: [OpenAI Help — Managing billing for ChatGPT and the API platform](https://help.openai.com/en/articles/9039756-managing-billing-for-chatgpt-and-the-api-platform). No conectaremos la cuenta personal de Juan Pablo ni guardaremos sus credenciales en el sitio.
+
+**Importante sobre la suscripción de ChatGPT:** la suscripción Basic permite usar ChatGPT en sus superficies disponibles, pero no incluye acceso API para incrustarlo en una web. La API de OpenAI tiene facturación y configuración separadas. Fuente: [OpenAI Help — facturación de ChatGPT y API](https://help.openai.com/en/articles/9039756-managing-billing-for-chatgpt-and-the-api-platform). No se conectará la cuenta personal de Juan Pablo ni se copiarán sus credenciales a la landing.
+
 ---
 
 ## Fase 2 — WhatsApp Business (sin API, 1–2 semanas)
