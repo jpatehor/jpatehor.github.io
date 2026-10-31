@@ -94,6 +94,8 @@ function checkRateLimit(ip) {
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
+    const requestUrl = new URL(request.url);
+    if (requestUrl.pathname !== "/api/chat") return response({ error: "Ruta no encontrada." }, 404, origin);
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(origin) });
     if (request.method !== "POST") return response({ error: "Método no permitido." }, 405, origin);
     if (origin && origin !== ORIGIN) return response({ error: "Origen no autorizado." }, 403, origin);
