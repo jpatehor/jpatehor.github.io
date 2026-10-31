@@ -211,7 +211,8 @@
   .chat-toggle::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(227,6,19,.35);animation:chatPulse 2.4s infinite}
   @keyframes chatPulse{0%{transform:scale(.9);opacity:.8}70%{transform:scale(1.25);opacity:0}100%{opacity:0}}
   .chat-panel{position:absolute;right:0;bottom:72px;width:350px;max-width:calc(100vw - 36px);max-height:min(520px,70vh);background:#fff;border-radius:18px;box-shadow:0 24px 60px rgba(6,59,70,.28);display:none;flex-direction:column;overflow:hidden}
-  .chat-panel.open{display:flex}
+  .chat-panel.open{display:flex;animation:chatIn .28s ease}
+  @keyframes chatIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
   .chat-head{background:var(--teal);color:#fff;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px}
   .chat-head b{display:block;font-size:14px}
   .chat-head span{display:block;font-size:11px;color:#A9C6CD;margin-top:2px}
@@ -879,6 +880,7 @@
   const chatToggle = document.getElementById('chatToggle');
   const chatClose = document.getElementById('chatClose');
   const chatBody = document.getElementById('chatBody');
+  let chatClosed = false;
 
   const answers = {
     docs: 'Para extractos, certificados, paz y salvos o soporte de canales virtuales: <a href="tel:018000941318">01 8000 941 318</a> (Opción 4 y luego 2) o <a href="mailto:bancoomeva_empresarial@coomeva.com.co">bancoomeva_empresarial@coomeva.com.co</a>. Horario: lunes a viernes, 8:00 a.m. – 6:00 p.m.',
@@ -909,6 +911,17 @@
   chatClose.addEventListener('click', () => {
     chatPanel.classList.remove('open');
     chatPanel.setAttribute('aria-hidden', 'true');
+    chatClosed = true;
+  });
+  // Abrir automáticamente al cargar la landing
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      if (!chatClosed && !chatPanel.classList.contains('open')) {
+        chatPanel.classList.add('open');
+        chatPanel.setAttribute('aria-hidden', 'false');
+        chatBody.scrollTop = chatBody.scrollHeight;
+      }
+    }, 1400);
   });
   chatBody.addEventListener('click', (e) => {
     const b = e.target.closest('[data-intent]');
