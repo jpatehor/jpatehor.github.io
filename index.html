@@ -204,6 +204,27 @@
   .modal-actions .btn{font-size:14px;padding:12px 20px}
   .modal-note{font-size:11px;color:var(--muted);margin-top:14px}
 
+  /* CHAT ASISTENTE */
+  .chat{position:fixed;right:18px;bottom:18px;z-index:90;font-family:'Montserrat',Arial,sans-serif}
+  .chat-toggle{position:relative;width:60px;height:60px;border-radius:50%;border:0;background:var(--red);color:#fff;cursor:pointer;box-shadow:0 12px 26px rgba(227,6,19,.38);display:flex;align-items:center;justify-content:center;font-size:26px;transition:transform .2s}
+  .chat-toggle:hover{transform:scale(1.05)}
+  .chat-toggle::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(227,6,19,.35);animation:chatPulse 2.4s infinite}
+  @keyframes chatPulse{0%{transform:scale(.9);opacity:.8}70%{transform:scale(1.25);opacity:0}100%{opacity:0}}
+  .chat-panel{position:absolute;right:0;bottom:72px;width:350px;max-width:calc(100vw - 36px);max-height:min(520px,70vh);background:#fff;border-radius:18px;box-shadow:0 24px 60px rgba(6,59,70,.28);display:none;flex-direction:column;overflow:hidden}
+  .chat-panel.open{display:flex}
+  .chat-head{background:var(--teal);color:#fff;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .chat-head b{display:block;font-size:14px}
+  .chat-head span{display:block;font-size:11px;color:#A9C6CD;margin-top:2px}
+  .chat-close{background:rgba(255,255,255,.12);border:0;color:#fff;width:30px;height:30px;border-radius:50%;font-size:20px;line-height:1;cursor:pointer}
+  .chat-body{padding:16px;overflow-y:auto;background:var(--cream);display:flex;flex-direction:column;gap:10px}
+  .msg{max-width:88%;padding:10px 13px;border-radius:12px;font-size:13px;line-height:1.5}
+  .msg.bot{background:#fff;border:1px solid var(--line);color:var(--ink);align-self:flex-start;border-bottom-left-radius:4px}
+  .msg.user{background:var(--teal);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+  .msg a{color:var(--red);font-weight:700;text-decoration:underline}
+  .chat-quick{display:flex;flex-wrap:wrap;gap:7px;margin-top:2px}
+  .chat-quick button{border:1px solid var(--line);background:#fff;color:var(--teal);font-family:inherit;font-size:11.5px;font-weight:700;padding:7px 11px;border-radius:100px;cursor:pointer}
+  .chat-quick button:hover{border-color:var(--teal);background:var(--teal-soft)}
+
   /* TRANSPARENCIA */
   .legal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
   .legal-item{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid var(--line);border-radius:12px;padding:16px 18px;font-size:14px;font-weight:600;color:var(--teal);background:var(--cream);transition:transform .2s,border-color .2s,background .2s}
@@ -763,6 +784,28 @@
   </div>
 </div>
 
+<!-- CHAT ASISTENTE -->
+<div class="chat">
+  <button class="chat-toggle" id="chatToggle" aria-label="Abrir asistente virtual">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+  </button>
+  <div class="chat-panel" id="chatPanel" aria-hidden="true">
+    <div class="chat-head">
+      <div><b>Asistente Banca Empresarial</b><span>Respuestas inmediatas · 24/7</span></div>
+      <button class="chat-close" id="chatClose" aria-label="Cerrar">×</button>
+    </div>
+    <div class="chat-body" id="chatBody">
+      <div class="msg bot">Hola, soy el asistente de Diana. ¿En qué le ayudo?</div>
+      <div class="chat-quick" id="chatQuick">
+        <button data-intent="docs">Documentos</button>
+        <button data-intent="req">Requisitos de crédito</button>
+        <button data-intent="linea">Línea de atención</button>
+        <button data-intent="agenda">Hablar con Diana</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   // Modal de acompañamiento
   const supportModal = document.getElementById('supportModal');
@@ -829,6 +872,54 @@
       + `Necesidad: ${f.necesidad.value}%0A`
       + `${f.mensaje.value ? 'Mensaje: ' + f.mensaje.value : ''}`;
     window.open(`https://wa.me/573187075136?text=${encodeURIComponent(decodeURIComponent(texto))}`, '_blank');
+  });
+
+  // Chat asistente
+  const chatPanel = document.getElementById('chatPanel');
+  const chatToggle = document.getElementById('chatToggle');
+  const chatClose = document.getElementById('chatClose');
+  const chatBody = document.getElementById('chatBody');
+
+  const answers = {
+    docs: 'Para extractos, certificados, paz y salvos o soporte de canales virtuales: <a href="tel:018000941318">01 8000 941 318</a> (Opción 4 y luego 2) o <a href="mailto:bancoomeva_empresarial@coomeva.com.co">bancoomeva_empresarial@coomeva.com.co</a>. Horario: lunes a viernes, 8:00 a.m. – 6:00 p.m.',
+    req: 'Para un crédito empresarial necesitas RUT, cámara de comercio, estados financieros y cédula del representante legal. <a href="#servicios">Mira los productos aquí</a> y te acompaño con la lista exacta.',
+    linea: 'Línea Empresarial Bancoomeva: <a href="tel:018000941318">01 8000 941 318</a> (Opción 4 y 2) · <a href="tel:+573009109898">300 910 9898</a> (Opción 2, 4 y 2). Correo: <a href="mailto:bancoomeva_empresarial@coomeva.com.co">bancoomeva_empresarial@coomeva.com.co</a>.',
+    agenda: 'Con gusto. <a href="https://wa.me/573187075136?text=Hola%20Diana%2C%20necesito%20acompa%C3%B1amiento%20con%20mi%20documentaci%C3%B3n." target="_blank" rel="noopener">Escríbeme por WhatsApp</a> y reviso tu caso.'
+  };
+  const quickHTML = '<button data-intent="docs">Documentos</button><button data-intent="req">Requisitos de crédito</button><button data-intent="linea">Línea de atención</button><button data-intent="agenda">Hablar con Diana</button>';
+
+  function addMsg(text, cls) {
+    const d = document.createElement('div');
+    d.className = 'msg ' + cls;
+    d.innerHTML = text;
+    chatBody.appendChild(d);
+  }
+  function addQuick() {
+    chatBody.querySelectorAll('.chat-quick').forEach(q => q.remove());
+    const q = document.createElement('div');
+    q.className = 'chat-quick';
+    q.innerHTML = quickHTML;
+    chatBody.appendChild(q);
+  }
+  chatToggle.addEventListener('click', () => {
+    const open = chatPanel.classList.toggle('open');
+    chatPanel.setAttribute('aria-hidden', open ? 'false' : 'true');
+    if (open) chatBody.scrollTop = chatBody.scrollHeight;
+  });
+  chatClose.addEventListener('click', () => {
+    chatPanel.classList.remove('open');
+    chatPanel.setAttribute('aria-hidden', 'true');
+  });
+  chatBody.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-intent]');
+    if (!b) return;
+    addMsg(b.textContent, 'user');
+    const key = b.dataset.intent;
+    setTimeout(() => {
+      addMsg(answers[key], 'bot');
+      addQuick();
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }, 250);
   });
 </script>
 </body>
