@@ -222,6 +222,9 @@
   .msg.bot{background:#fff;border:1px solid var(--line);color:var(--ink);align-self:flex-start;border-bottom-left-radius:4px}
   .msg.user{background:var(--teal);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
   .msg a{color:var(--red);font-weight:700;text-decoration:underline}
+  .msg.pending{color:var(--muted);font-style:italic}
+  .msg .source-links{display:flex;flex-direction:column;gap:4px;margin-top:8px;font-size:11px}
+  .msg .source-links a{color:var(--teal);font-weight:700;overflow-wrap:anywhere}
   .chat-quick{display:flex;flex-wrap:wrap;gap:7px;margin-top:2px}
   .chat-quick button{border:1px solid var(--line);background:#fff;color:var(--teal);font-family:inherit;font-size:11.5px;font-weight:700;padding:7px 11px;border-radius:100px;cursor:pointer}
   .chat-quick button:hover{border-color:var(--teal);background:var(--teal-soft)}
@@ -827,6 +830,7 @@
       <button data-intent="tramites">Trámites</button>
       <button data-intent="linea">Líneas de Atención</button>
       <button data-intent="breb">Bre-B</button>
+      <button data-intent="faq">Preguntas Frecuentes</button>
       <button data-intent="agenda">Hablar con Diana</button>
     </div>
     <div class="chat-input">
@@ -913,11 +917,19 @@
   const chatInput = document.getElementById('chatInput');
   const chatSend = document.getElementById('chatSend');
   let chatClosed = false;
+  // Configure only after deploying the secure Worker endpoint. Never store API keys here.
+  const CHATBOT_API_URL = window.BANCOOMEVA_CHAT_API_URL || '';
 
   const answers = {
     tramites: 'Puede solicitar extractos, certificados, paz y salvos y soporte de canales virtuales. <button class="chat-action" data-action="support">Solicitar Documentos</button>',
     linea: 'Línea Empresarial Bancoomeva:<br>• Nacional: <a href="tel:018000941318">01 8000 941 318</a> · Opción 4 y 2<br>• Móvil: <a href="tel:+573009109898">300 910 9898</a> · Opción 2, 4 y 2<br>• Correo: <a href="mailto:bancoomeva_empresarial@coomeva.com.co">bancoomeva_empresarial@coomeva.com.co</a><br>Horario: lunes a viernes, 8:00 a.m. – 6:00 p.m.',
     breb: 'Bre-B es el sistema de pagos inmediatos del Banco de la República. Permite enviar y recibir dinero en segundos, 24/7, entre bancos y billeteras, con una llave (celular, correo, cédula, alias @coo+celular o QR). El dinero llega en menos de 20 segundos y puedes asociar hasta 5 llaves. Está disponible en la app y en la banca virtual.<br><a href="https://www.bancoomeva.com.co/publicaciones/164752/bre-b/" target="_blank" rel="noopener">Ver guía oficial</a>',
+    faq: '¿Qué te gustaría consultar?<div class="chat-quick"><button data-intent="faq-credit-time">¿Cuánto tarda un crédito?</button><button data-intent="faq-docs">¿Qué documentos necesito?</button><button data-intent="faq-rates">¿Cuáles son las tasas?</button><button data-intent="faq-cost">¿La asesoría tiene costo?</button><button data-intent="faq-approval">¿Garantizan aprobación?</button></div>',
+    'faq-credit-time': 'El tiempo depende del producto, de que la documentación esté completa y de la evaluación de crédito. Diana puede revisar tu caso y orientarte sobre el siguiente paso.',
+    'faq-docs': 'Para iniciar una solicitud empresarial normalmente se solicitan RUT, certificado de Cámara de Comercio, estados financieros y documento del representante legal. Los requisitos pueden variar por producto. <button class="chat-action" data-action="support">Solicitar acompañamiento documental</button>',
+    'faq-rates': 'Las tasas y tarifas pueden cambiar y dependen del producto y las condiciones vigentes. Consulta la fuente oficial: <a href="https://www.bancoomeva.com.co/publicaciones/163812/tasas-y-tarifas/" target="_blank" rel="noopener">Tasas y Tarifas Bancoomeva</a>.',
+    'faq-cost': 'La conversación inicial y la orientación comercial no tienen costo. Las condiciones y costos de cada producto se informan en su ficha y en Tasas y Tarifas oficiales.',
+    'faq-approval': 'No. La aprobación depende del estudio, la información entregada y las políticas vigentes de Bancoomeva. Diana puede ayudarte a preparar la solicitud; la decisión la toma el banco.',
     agenda: 'Con gusto. <a href="https://wa.me/573187075136?text=Hola%20Diana%2C%20necesito%20acompa%C3%B1amiento%20con%20mi%20documentaci%C3%B3n." target="_blank" rel="noopener">Escríbeme por WhatsApp</a> y reviso tu caso.',
     ove: 'Puede ingresar a la Oficina Virtual Empresarial aquí: <a href="https://oficinavirtualemp.bancoomeva.com.co/" target="_blank" rel="noopener">Abrir Oficina Virtual</a>.',
     credito: 'La revisión de crédito la hago directamente contigo, según tu operación y tu flujo de caja. <a href="https://wa.me/573187075136?text=Hola%20Diana%2C%20quiero%20revisar%20una%20alternativa%20de%20cr%C3%A9dito." target="_blank" rel="noopener">Escríbeme por WhatsApp</a> y lo miramos.',
@@ -980,6 +992,12 @@
   function detectIntent(text) {
     const s = normalize(text);
     if (/bre-?b|llave/.test(s)) return 'breb';
+    if (/cuanto tarda|tiempo.*credito|demora.*credito/.test(s)) return 'faq-credit-time';
+    if (/que documento|documentacion|requisitos.*document/.test(s)) return 'faq-docs';
+    if (/tasa|tarifa|interes/.test(s)) return 'faq-rates';
+    if (/costo.*asesoria|asesoria.*costo|cobran.*asesoria/.test(s)) return 'faq-cost';
+    if (/garantiza.*aprob|aprobacion.*garant/.test(s)) return 'faq-approval';
+    if (/preguntas frecuentes|pregunta frecuente|faq/.test(s)) return 'faq';
     if (/documento|extracto|certificado|paz|salvo|tramite/.test(s)) return 'tramites';
     if (/oficina virtual|ove|banca movil|app/.test(s)) return 'ove';
     if (/linea|telefono|contacto|correo|horario/.test(s)) return 'linea';
@@ -988,11 +1006,59 @@
     if (/gracias/.test(s)) return 'gracias';
     return null;
   }
+  function addAIAnswer(answer, sources = []) {
+    const d = document.createElement('div');
+    d.className = 'msg bot';
+    const text = document.createElement('div');
+    text.textContent = answer || 'No tengo una respuesta verificada. Puedo conectarte con Diana.';
+    d.appendChild(text);
+    const safeSources = sources.filter(s => {
+      try {
+        const host = new URL(s.url).hostname;
+        return host === 'bancoomeva.com.co' || host.endsWith('.bancoomeva.com.co');
+      } catch { return false; }
+    });
+    if (safeSources.length) {
+      const links = document.createElement('div');
+      links.className = 'source-links';
+      safeSources.slice(0, 3).forEach(s => {
+        const a = document.createElement('a');
+        a.href = s.url; a.target = '_blank'; a.rel = 'noopener';
+        a.textContent = 'Fuente oficial: ' + (s.title || 'Bancoomeva');
+        links.appendChild(a);
+      });
+      d.appendChild(links);
+    }
+    chatBody.appendChild(d);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+  async function askAI(text) {
+    const pending = document.createElement('div');
+    pending.className = 'msg bot pending';
+    pending.textContent = 'Consultando información oficial de Bancoomeva…';
+    chatBody.appendChild(pending);
+    chatBody.scrollTop = chatBody.scrollHeight;
+    try {
+      const res = await fetch(CHATBOT_API_URL, {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message: text})
+      });
+      if (!res.ok) throw new Error('api');
+      const data = await res.json();
+      pending.remove();
+      addAIAnswer(data.answer, data.sources || []);
+    } catch (e) {
+      pending.remove();
+      const key = detectIntent(text);
+      addMsg(key ? answers[key] : answers.fallback, 'bot');
+    }
+  }
   function sendText() {
     const text = chatInput.value.trim();
     if (!text) return;
     addMsg(text, 'user');
     chatInput.value = '';
+    if (CHATBOT_API_URL) { askAI(text); return; }
     const key = detectIntent(text);
     setTimeout(() => {
       addMsg(key ? answers[key] : answers.fallback, 'bot');
