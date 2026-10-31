@@ -1,0 +1,9 @@
+name = "banca-empresarial-chat"
+main = "src/index.js"
+compatibility_date = "2026-10-31"
+
+[vars]
+OPENAI_MODEL = "gpt-4o-mini"
+
+# Configure the key as a Cloudflare secret; never add it to this file:
+# npx wrangler secret put OPENAI_API_KEY
