@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arma tu cotización — CHEF JUAN PABLO ATE</title>
+<meta name="description" content="Arma tu cotización en 1 minuto: elige cuántas personas, el menú y los servicios. El precio se calcula en vivo.">
+<meta name="theme-color" content="#0b0908">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Arma tu cotización — CHEF JUAN PABLO ATE">
+<meta property="og:description" content="Elige personas, menú y servicios. Tu cotización se calcula en vivo.">
+
+<link rel="stylesheet" href="assets/cotizar.css">
+</head>
+<body>
+
+<header class="nav">
+  <a class="brand" href="#">
+    <span class="brand-mark">JP</span>
+    <span>
+      <span class="brand-name">Chef Juan Pablo Ate</span>
+      <span class="brand-sub">Catering &amp; International Food</span>
+    </span>
+  </a>
+
+  <nav class="nav-links">
+    <a href="#menu">Menú</a>
+    <a href="#servicios">Servicios</a>
+    <a href="#datos">Mis datos</a>
+  </nav>
+
+  <a class="nav-cta" href="#resumen">Mi cotización <span class="nav-count" id="navCount">0</span></a>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <p class="kicker">Catering &amp; International Food</p>
+    <h1>Arma tu cotización <em>en 1 minuto</em></h1>
+    <p class="lead">
+      Elige cuántas personas, arma tu menú y suma los servicios que necesitas.
+      El total se calcula en vivo y puedes ajustar o borrar todo lo que agregues.
+    </p>
+
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#personas">Empezar ahora</a>
+      <a class="btn btn-ghost" href="#menu">Ver el menú</a>
+    </div>
+
+    <ul class="hero-facts">
+      <li><strong>$ 200.000</strong> Servicio de chef incluido</li>
+      <li><strong>100 %</strong> Menú editable</li>
+      <li><strong>En vivo</strong> Precio y total</li>
+    </ul>
+  </div>
+</section>
+
+<main class="layout">
+
+  <div class="builder">
+
+    <!-- ============ PASO 1 ============ -->
+    <section class="step" id="personas">
+      <div class="step-head">
+        <span class="step-num">1</span>
+        <div>
+          <h2>¿Cuántas personas?</h2>
+          <p class="sub">Es la base para calcular los platos por persona.</p>
+        </div>
+      </div>
+
+      <div class="people-row">
+        <div class="people-control">
+          <button type="button" data-people-ctrl="-1" aria-label="Quitar una persona">−</button>
+          <input type="number" id="peopleInput" value="30" min="1" max="300" inputmode="numeric" aria-label="Número de personas">
+          <button type="button" data-people-ctrl="1" aria-label="Agregar una persona">+</button>
+        </div>
+
+        <div class="quick">
+          <button class="chip" type="button" data-people="20">20</button>
+          <button class="chip is-active" type="button" data-people="30">30</button>
+          <button class="chip" type="button" data-people="40">40</button>
+          <button class="chip" type="button" data-people="50">50</button>
+          <button class="chip" type="button" data-people="70">70</button>
+          <button class="chip" type="button" data-people="100">100</button>
+        </div>
+      </div>
+
+      <p class="hint">Los platos por persona se ajustan solos cuando cambias esta cantidad.</p>
+    </section>
+
+    <!-- ============ PASO 2 ============ -->
+    <section class="step" id="menu">
+      <div class="step-head">
+        <span class="step-num">2</span>
+        <div>
+          <h2>Elige tu menú</h2>
+          <p class="sub">Parrilladas, paellas, platos fuertes, tablas, pasabocos y cócteles.</p>
+        </div>
+      </div>
+
+      <div class="note">
+        <span aria-hidden="true">✏️</span>
+        <div>
+          <strong>El menú es 100 % editable.</strong> Agrega lo que quieras, cambia cantidades,
+          quita platos o vuelve a empezar. Nada queda fijo hasta que envíes tu solicitud.
+        </div>
+      </div>
+
+      <div class="tabs" id="tabs" role="tablist" aria-label="Categorías del menú"></div>
+      <div class="catalog" id="catalog"></div>
+    </section>
+
+    <!-- ============ PASO 3 ============ -->
+    <section class="step" id="servicios">
+      <div class="step-head">
+        <span class="step-num">3</span>
+        <div>
+          <h2>Servicios adicionales</h2>
+          <p class="sub">El servicio de chef ya está incluido. Suma lo que necesites.</p>
+        </div>
+      </div>
+
+      <div class="services" id="services"></div>
+
+      <p class="hint">
+        El chef helper se recomienda para eventos de más de 20 personas.
+        El asador solo se cobra si el lugar no cuenta con uno.
+      </p>
+    </section>
+
+    <!-- ============ PASO 4 ============ -->
+    <section class="step" id="datos">
+      <div class="step-head">
+        <span class="step-num">4</span>
+        <div>
+          <h2>Tus datos</h2>
+          <p class="sub">Para enviarte la cotización formal. Puedes editar o borrar cuando quieras.</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="cName">Nombre</label>
+          <input id="cName" type="text" placeholder="Tu nombre" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="cPhone">Teléfono / WhatsApp</label>
+          <input id="cPhone" type="tel" placeholder="300 000 0000" autocomplete="tel">
+        </div>
+        <div class="field">
+          <label for="cDate">Fecha del evento</label>
+          <input id="cDate" type="date">
+        </div>
+        <div class="field">
+          <label for="cTime">Hora de servicio</label>
+          <input id="cTime" type="time">
+        </div>
+        <div class="field full">
+          <label for="cPlace">Lugar</label>
+          <input id="cPlace" type="text" placeholder="Dirección o salón">
+        </div>
+        <div class="field full">
+          <label for="cNotes">Notas para el chef</label>
+          <textarea id="cNotes" placeholder="Alergias, restricciones, ocasión especial..."></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-ghost btn-sm" type="button" data-act="clearForm">Borrar datos</button>
+        <a class="btn btn-ghost btn-sm" href="#personas">Volver arriba</a>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ============ RESUMEN ============ -->
+  <aside class="summary" id="resumen">
+    <div class="print-head" id="printHead"></div>
+
+    <div class="summary-head">
+      <h2>Tu cotización</h2>
+      <span id="summaryPeople">30 personas</span>
+    </div>
+
+    <ul class="cart" id="cart"></ul>
+
+    <div class="totals">
+      <div><span>Menú</span><span id="sumMenu">$ 0</span></div>
+      <div><span>Servicios</span><span id="sumServices">$ 0</span></div>
+      <div class="grand"><span>Total</span><span id="sumTotal">$ 0</span></div>
+      <div class="per"><span>Por persona</span><span id="sumPer">$ 0</span></div>
+    </div>
+
+    <div class="summary-actions">
+      <button class="btn btn-primary btn-block" type="button" data-act="whatsapp">Enviar por WhatsApp</button>
+      <button class="btn btn-ghost btn-block" type="button" data-act="print">Descargar PDF</button>
+      <button class="btn btn-ghost btn-block" type="button" data-act="clearCart">Vaciar y empezar de nuevo</button>
+    </div>
+
+    <p class="fine">
+      Incluye el servicio de chef por $ 200.000. Los platos por persona se recalculan con el
+      número de invitados. Precios sujetos a confirmación de disponibilidad.
+    </p>
+  </aside>
+
+</main>
+
+<div class="mobile-bar">
+  <div>
+    <span class="mb-label">Total</span>
+    <span class="mb-total" id="mbTotal">$ 0</span>
+    <span class="mb-label" id="mbCount">0 platos</span>
+  </div>
+  <a class="btn btn-primary btn-sm" href="#resumen">Ver resumen</a>
+</div>
+
+<!-- ============ DETALLE ============ -->
+<dialog id="detailDialog" aria-labelledby="dlgTitle">
+  <div class="dlg-head">
+    <h3 id="dlgTitle">Detalle</h3>
+    <button class="dlg-close" type="button" data-act="closeDialog" aria-label="Cerrar">✕</button>
+  </div>
+  <div class="dlg-body">
+    <p class="dlg-price" id="dlgPrice">$ 0</p>
+    <p id="dlgDesc"></p>
+    <ul id="dlgDetails"></ul>
+    <div class="summary-actions" style="margin-top:18px;">
+      <button class="btn btn-primary btn-block" type="button" id="dlgAdd">Agregar a mi cotización</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="assets/cotizar.js"></script>
+</body>
+</html>
