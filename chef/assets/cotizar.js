@@ -399,7 +399,7 @@
       html += '<p class="cart-group">Menú</p>';
       html += menuEntries.map(lineHtml).join("");
     } else {
-      html += '<p class="cart-empty">Aún no has agregado platos.<br>Elige algo del menú para empezar.</p>';
+      html += '<p class="cart-empty">Tu cotización está en ceros.<br>Agrega un plato y el servicio de chef se suma automáticamente.</p>';
     }
     if (serviceEntries.length) {
       html += '<p class="cart-group">Servicios</p>';
@@ -437,6 +437,12 @@
     setText("navCount", count);
     var mbCount = document.getElementById("mbCount");
     if (mbCount) mbCount.textContent = count + (count === 1 ? " plato" : " platos");
+
+    var waBtn = document.querySelector('[data-act="whatsapp"]');
+    if (waBtn) waBtn.disabled = total === 0;
+
+    var printBtn = document.querySelector('[data-act="print"]');
+    if (printBtn) printBtn.disabled = total === 0;
   }
 
   function setText(id, text) {
@@ -500,9 +506,28 @@
   }
 
   function renderAll() {
+    syncChef();
     renderCatalog();
     renderServices();
     renderCart();
+  }
+
+  /* El chef se incluye automáticamente en cuanto hay algo en la cotización,
+     y desaparece si el cliente vacía todo para volver a ceros. */
+  function syncChef() {
+    var hasOther = false;
+    state.cart.forEach(function (value, key) {
+      if (key !== "chef") hasOther = true;
+    });
+
+    if (!hasOther) {
+      state.cart.delete("chef");
+      return;
+    }
+
+    if (!state.cart.has("chef")) {
+      state.cart.set("chef", { id: "chef", qty: 1, manual: true });
+    }
   }
 
   /* ---------------- Personas ---------------- */
@@ -646,7 +671,6 @@
       }
       if (act === "clearCart") {
         state.cart.clear();
-        state.cart.set("chef", { id: "chef", qty: 1, manual: true });
         renderAll();
         return;
       }
@@ -754,7 +778,4 @@
   renderTabs();
   renderServices();
   setPeople(30, true);
-
-  /* Menú de ejemplo precargado para que se entienda el flujo */
-  addItem("parr-basica");
 })();
