@@ -229,6 +229,65 @@
 
   var ALL = MENU.concat(SERVICES);
 
+  /* ---------------- Fotos por producto ---------------- */
+
+  var IMG = {
+    "parr-basica": "parrillada-basica",
+    "parr-3m": "tres-momentos",
+    "paella-marinara": "paella",
+    "paella-langosta": "paella-langosta",
+    "paella-regional": "paella-carnes",
+    "paella-carnes": "paella-carnes",
+    "paella-pollo": "paella",
+    "paella-vegetariana": "paella-vegetariana",
+    "pollo-champinones": "pollo",
+    "medallon-cerdo": "cerdo",
+    "solomito-bbq": "solomito",
+    "robalo": "pescado",
+    "pollo-cremoso": "pollo",
+    "chaufa": "chaufa",
+    "medallones-pollo": "pollo",
+    "merluza": "pescado",
+    "salmon": "plato-fuerte",
+    "pavo": "pavo",
+    "tabla-quesos": "tabla-quesos",
+    "tabla-frutas": "tabla-frutas",
+    "rollos-jamon": "pasabocos",
+    "bolas-pollo": "pasabocos",
+    "pinchos": "pasabocos",
+    "langostinos": "langostinos",
+    "albondigas": "pasabocos",
+    "mini-sanduches": "pasabocos",
+    "daiquiri-fresa": "coctel-fresa",
+    "daiquiri-mango": "coctel",
+    "tequila-sunrise": "coctel",
+    "margarita-sunrise": "coctel"
+  };
+
+  var CAT_IMG = {
+    parrilladas: "parrillada-basica",
+    paellas: "paella",
+    platos: "plato-fuerte",
+    pavo: "pavo",
+    tablas: "tabla-quesos",
+    pasabocos: "pasabocos",
+    cocteles: "coctel"
+  };
+
+  function imgFor(item) {
+    var name = IMG[item.id] || CAT_IMG[item.cat] || "parrillada-basica";
+    return "assets/img/" + name + ".jpg";
+  }
+
+  /* Si una foto falla, cae en la imagen principal */
+  document.addEventListener("error", function (event) {
+    var img = event.target;
+    if (img && img.tagName === "IMG" && !img.dataset.fallback) {
+      img.dataset.fallback = "1";
+      img.src = "assets/img/parrillada-basica.jpg";
+    }
+  }, true);
+
   /* ---------------- Estado ---------------- */
 
   var state = {
@@ -302,16 +361,19 @@
     catalogEl.innerHTML = items.map(function (item) {
       var added = state.cart.has(item.id);
       return '<article class="item">' +
-        '<div class="item-top">' +
-          "<h3>" + item.name + "</h3>" +
-          '<span class="price">' + money(item.price) + "<small>" + unitLabel(item) + "</small></span>" +
-        "</div>" +
-        '<p class="desc">' + item.desc + "</p>" +
-        '<div class="item-foot">' +
-          '<button class="link-btn" data-detail="' + item.id + '">Ver detalles</button>' +
-          '<button class="btn-add' + (added ? " is-added" : "") + '" data-add="' + item.id + '">' +
-            (added ? "Agregado ✓" : "Agregar +") +
-          "</button>" +
+        '<img class="item-media" src="' + imgFor(item) + '" alt="' + item.name + '" loading="lazy">' +
+        '<div class="item-body">' +
+          '<div class="item-top">' +
+            "<h3>" + item.name + "</h3>" +
+            '<span class="price">' + money(item.price) + "<small>" + unitLabel(item) + "</small></span>" +
+          "</div>" +
+          '<p class="desc">' + item.desc + "</p>" +
+          '<div class="item-foot">' +
+            '<button class="link-btn" data-detail="' + item.id + '">Ver detalles</button>' +
+            '<button class="btn-add' + (added ? " is-added" : "") + '" data-add="' + item.id + '">' +
+              (added ? "Agregado ✓" : "Agregar +") +
+            "</button>" +
+          "</div>" +
         "</div>" +
       "</article>";
     }).join("");
@@ -598,6 +660,8 @@
     if (!item || !dialog) return;
 
     document.getElementById("dlgTitle").textContent = item.name;
+    document.getElementById("dlgImg").src = imgFor(item);
+    document.getElementById("dlgImg").alt = item.name;
     document.getElementById("dlgPrice").textContent = money(item.price) + " " + unitLabel(item);
     document.getElementById("dlgDesc").textContent = item.desc;
     document.getElementById("dlgDetails").innerHTML = (item.details || [])
