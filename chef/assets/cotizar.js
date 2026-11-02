@@ -441,8 +441,8 @@
     var waBtn = document.querySelector('[data-act="whatsapp"]');
     if (waBtn) waBtn.disabled = total === 0;
 
-    var printBtn = document.querySelector('[data-act="print"]');
-    if (printBtn) printBtn.disabled = total === 0;
+    var finalBtn = document.querySelector('[data-act="final"]');
+    if (finalBtn) finalBtn.disabled = total === 0;
   }
 
   function setText(id, text) {
@@ -510,6 +510,48 @@
     renderCatalog();
     renderServices();
     renderCart();
+    saveSnapshot();
+  }
+
+  /* Guarda el estado para la página de cotización final */
+  function buildSnapshot() {
+    var menu = [], services = [], totals = { menu: 0, services: 0, total: 0 };
+
+    state.cart.forEach(function (entry) {
+      var item = byId(entry.id);
+      if (!item) return;
+
+      var qty = item.unit === "hora" ? entry.qty : (item.cat ? computedQty(entry) : 1);
+      var lineTotal = qty * item.price;
+      var row = {
+        id: item.id, name: item.name, desc: item.desc, cat: item.cat || null,
+        unit: item.unit, price: item.price, qty: qty, total: lineTotal
+      };
+
+      if (item.cat) { menu.push(row); totals.menu += lineTotal; }
+      else { services.push(row); totals.services += lineTotal; }
+    });
+
+    totals.total = totals.menu + totals.services;
+
+    return {
+      createdAt: new Date().toISOString(),
+      people: state.people,
+      form: state.form,
+      menu: menu,
+      services: services,
+      totals: totals
+    };
+  }
+
+  function saveSnapshot() {
+    try {
+      if (state.cart.size === 0) {
+        localStorage.removeItem("chefCotizacion");
+      } else {
+        localStorage.setItem("chefCotizacion", JSON.stringify(buildSnapshot()));
+      }
+    } catch (e) { /* almacenamiento no disponible */ }
   }
 
   /* El chef se incluye automáticamente en cuanto hay algo en la cotización,
@@ -582,7 +624,10 @@
     Object.keys(FIELDS).forEach(function (key) {
       var el = document.getElementById(FIELDS[key]);
       if (!el) return;
-      el.addEventListener("input", function () { state.form[key] = el.value; });
+      el.addEventListener("input", function () {
+        state.form[key] = el.value;
+        saveSnapshot();
+      });
     });
   }
 
@@ -662,6 +707,11 @@
       if (act === "dec" && id) { changeQty(id, -1); return; }
       if (act === "reset" && id) { resetQty(id); return; }
       if (act === "print") { window.print(); return; }
+      if (act === "final") {
+        saveSnapshot();
+        window.open("cotizacion-final.html", "_blank", "noopener");
+        return;
+      }
       if (act === "whatsapp") { sendWhatsapp(); return; }
       if (act === "clearForm") { clearForm(); return; }
       if (act === "closeDialog") {
